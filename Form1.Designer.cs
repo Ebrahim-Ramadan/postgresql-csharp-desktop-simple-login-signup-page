@@ -36,11 +36,16 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.Users = new System.Windows.Forms.DataGridView();
+            this.showUsers = new System.Windows.Forms.Button();
+            this.showUsersLAbel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.Users)).BeginInit();
             this.SuspendLayout();
             // 
             // username
             // 
-            this.username.Location = new System.Drawing.Point(289, 124);
+            this.username.Location = new System.Drawing.Point(327, 72);
             this.username.Name = "username";
             this.username.Size = new System.Drawing.Size(142, 22);
             this.username.TabIndex = 0;
@@ -48,7 +53,7 @@
             // 
             // password
             // 
-            this.password.Location = new System.Drawing.Point(289, 167);
+            this.password.Location = new System.Drawing.Point(327, 115);
             this.password.Name = "password";
             this.password.Size = new System.Drawing.Size(142, 22);
             this.password.TabIndex = 1;
@@ -56,7 +61,7 @@
             // 
             // login
             // 
-            this.login.Location = new System.Drawing.Point(321, 195);
+            this.login.Location = new System.Drawing.Point(359, 143);
             this.login.Name = "login";
             this.login.Size = new System.Drawing.Size(75, 27);
             this.login.TabIndex = 2;
@@ -66,7 +71,7 @@
             // 
             // signup
             // 
-            this.signup.Location = new System.Drawing.Point(356, 244);
+            this.signup.Location = new System.Drawing.Point(398, 184);
             this.signup.Name = "signup";
             this.signup.Size = new System.Drawing.Size(75, 27);
             this.signup.TabIndex = 3;
@@ -77,7 +82,7 @@
             // signuplabel
             // 
             this.signuplabel.AutoSize = true;
-            this.signuplabel.Location = new System.Drawing.Point(201, 249);
+            this.signuplabel.Location = new System.Drawing.Point(243, 189);
             this.signuplabel.Name = "signuplabel";
             this.signuplabel.Size = new System.Drawing.Size(137, 16);
             this.signuplabel.TabIndex = 4;
@@ -86,7 +91,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(289, 56);
+            this.label1.Location = new System.Drawing.Point(326, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(71, 16);
             this.label1.TabIndex = 5;
@@ -95,7 +100,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(205, 127);
+            this.label2.Location = new System.Drawing.Point(243, 75);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(67, 16);
             this.label2.TabIndex = 6;
@@ -104,17 +109,51 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(206, 170);
+            this.label3.Location = new System.Drawing.Point(244, 118);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(66, 16);
             this.label3.TabIndex = 7;
             this.label3.Text = "password";
+            // 
+            // Users
+            // 
+            this.Users.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.Users.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Users.Location = new System.Drawing.Point(206, 276);
+            this.Users.Name = "Users";
+            this.Users.RowHeadersWidth = 51;
+            this.Users.Size = new System.Drawing.Size(329, 150);
+            this.Users.TabIndex = 8;
+            this.Users.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Users_CellContentClick);
+            // 
+            // showUsers
+            // 
+            this.showUsers.Location = new System.Drawing.Point(246, 243);
+            this.showUsers.Name = "showUsers";
+            this.showUsers.Size = new System.Drawing.Size(95, 27);
+            this.showUsers.TabIndex = 9;
+            this.showUsers.Text = "click here";
+            this.showUsers.UseVisualStyleBackColor = true;
+            this.showUsers.Click += new System.EventHandler(this.showUsers_Click);
+            // 
+            // showUsersLAbel
+            // 
+            this.showUsersLAbel.AutoSize = true;
+            this.showUsersLAbel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showUsersLAbel.Location = new System.Drawing.Point(347, 245);
+            this.showUsersLAbel.Name = "showUsersLAbel";
+            this.showUsersLAbel.Size = new System.Drawing.Size(136, 20);
+            this.showUsersLAbel.TabIndex = 10;
+            this.showUsersLAbel.Text = "to show all users";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.showUsersLAbel);
+            this.Controls.Add(this.showUsers);
+            this.Controls.Add(this.Users);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -126,6 +165,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.Users)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -141,6 +181,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.DataGridView Users;
+        private System.Windows.Forms.Button showUsers;
+        private System.Windows.Forms.Label showUsersLAbel;
     }
 }
 

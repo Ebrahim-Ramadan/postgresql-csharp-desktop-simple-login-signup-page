@@ -14,6 +14,33 @@ namespace db
 {
     public partial class Form1 : Form
     {
+        private void ShowUsers()
+        {
+            string sql = "SELECT username FROM users";
+            connection.Open();
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(sql, connection))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+
+                        // Binding the retrieved data to the DataGridView control
+                        Users.DataSource = dataTable;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No users found.");
+                    }
+                }
+            }
+            connection.Close();
+        }
+
+
         private NpgsqlConnection connection;
         private string connectionString;
         public Form1()
@@ -88,6 +115,16 @@ namespace db
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void Users_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void showUsers_Click(object sender, EventArgs e)
+        {
+            ShowUsers();
         }
     }
 }
