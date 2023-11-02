@@ -19,6 +19,7 @@ finally
 }
 ```
 <br/>
+
 note: if any error found while installing the `npgsql` package or the `NuGet` had any issue, you can do the following:
 - in the solution explorer, right-click then choose 'manage NuGet packages'
 * search for `Npgsql` and install it
