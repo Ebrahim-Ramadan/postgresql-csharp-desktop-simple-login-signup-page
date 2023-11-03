@@ -4,11 +4,16 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 using Npgsql;
+using System.Security.Cryptography;
 
 namespace db
 {
@@ -41,11 +46,51 @@ namespace db
         }
 
 
+        private const string SecretKey = "your_secrkjbfwkrhfjhfhefhkehfjehfjshdfhsjdkhet_key_here";
+        public static string Generate256BitKey()
+        {
+            using (var generator = RandomNumberGenerator.Create())
+            {
+                byte[] keyBytes = new byte[32];
+                generator.GetBytes(keyBytes);
+                return Convert.ToBase64String(keyBytes);
+            }
+        }
+        
+        public string GenerateJwt(string username, string password)
+        {
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.Name, username),
+        };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            // generate the JWT token
+            var token = new JwtSecurityToken(
+                issuer: "your_issuer",
+                audience: "your_audience",
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(30), // Set the expiration time
+                signingCredentials: creds
+            );
+
+            // Serialize the JWT to a string
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
+        }
+
+
         private NpgsqlConnection connection;
         private string connectionString;
         public Form1()
         {
             InitializeComponent();
+
             connectionString = "Host=localhost;Port=7910;Username=postgres;Password='791000';Database=postgres;";
             connection = new NpgsqlConnection(connectionString);
         }
@@ -77,11 +122,13 @@ namespace db
                     if (reader.HasRows)
                     {
                         // Login successful; user exists in the database
-                        // You can add code to navigate to another tab or perform further actions.
-                        Form3 secondForm = new Form3();
-                        this.Close();
-                        // Show the dashboard form
-                        secondForm.ShowDialog();
+                        //navigating to the 2nd form(dashbaoard) and storing the jwt
+                        var jwt_generated = GenerateJwt(Username, Password);
+
+                        
+                        Form3 secondForm = new Form3(jwt_generated);
+                        
+                        secondForm.Show();
                         
                     }
                     else
@@ -98,7 +145,10 @@ namespace db
         {
 
         }
-
+        public void CloseForm1()
+        {
+            this.Close();
+        }
         private void label1_Click(object sender, EventArgs e)
         {
 
