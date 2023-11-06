@@ -22,41 +22,73 @@ namespace db
             connectionString = "Host=localhost;Port=7910;Username=postgres;Password='791000';Database=postgres;";
             connection = new NpgsqlConnection(connectionString);
         }
+        private void ShowUsers()
+        {
+            string sql = "SELECT username FROM users";
+            connection.Open();
 
+            using (NpgsqlCommand cmd = new NpgsqlCommand(sql, connection))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No users found.");
+                    }
+                }
+            }
+            connection.Close();
+        }
         private void signup_Click(object sender, EventArgs e)
         {
             // Fetch the username and password from textboxes
             string NewUsername = signupusername.Text;
             string NewPassword = signuppassword.Text;
 
-            // Create a query to insert the new user
-            string sql = "INSERT INTO users (username, password) VALUES (@NewUsername, @NewPassword)";
+            string All_users_query = "SELECT username FROM users WHERE username = @NewUsername";
 
-            // Open the database connection
             connection.Open();
 
-            using (NpgsqlCommand cmd = new NpgsqlCommand(sql, connection))
+            using (NpgsqlCommand cmd = new NpgsqlCommand(All_users_query, connection))
             {
-                cmd.Parameters.AddWithValue("NewUsername", NewUsername);  // Use the parameter names here
-                cmd.Parameters.AddWithValue("NewPassword", NewPassword);  // Use the parameter names here
+                cmd.Parameters.AddWithValue("NewUsername", NewUsername);
+                object existingUsername = cmd.ExecuteScalar(); // Check if the username already exists
 
-                int rowsAffected = cmd.ExecuteNonQuery();  // Execute the INSERT statement
-
-                if (rowsAffected > 0)
+                if (existingUsername != null)
                 {
-                    // Rows were affected, indicating a successful insertion
-                    MessageBox.Show("Account created successfully!");
+                    MessageBox.Show("Username already exists. Please choose a different one.");
                 }
                 else
                 {
-                    // No rows were affected, indicating a failed insertion
-                    MessageBox.Show("Signup failed. Please check your credentials.");
+                    string sql = "INSERT INTO users (username, password) VALUES (@NewUsername, @NewPassword)";
+
+                    using (NpgsqlCommand insertCmd = new NpgsqlCommand(sql, connection))
+                    {
+                        insertCmd.Parameters.AddWithValue("NewUsername", NewUsername);
+                        insertCmd.Parameters.AddWithValue("NewPassword", NewPassword);
+
+                        int rowsAffected = insertCmd.ExecuteNonQuery(); // Execute the INSERT statement
+
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Account created successfully!");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Signup failed. Please check your credentials.");
+                        }
+                    }
                 }
             }
+
             connection.Close();
             this.Close();
         }
-
 
         private void signupusername_TextChanged(object sender, EventArgs e)
         {

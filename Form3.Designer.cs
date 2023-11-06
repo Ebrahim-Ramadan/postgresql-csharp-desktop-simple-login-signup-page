@@ -56,7 +56,6 @@
             // 
             // jwt_generated
             // 
-            this.jwt_generated.AutoSize = true;
             this.jwt_generated.Location = new System.Drawing.Point(363, 208);
             this.jwt_generated.Name = "jwt_generated";
             this.jwt_generated.Size = new System.Drawing.Size(44, 16);
